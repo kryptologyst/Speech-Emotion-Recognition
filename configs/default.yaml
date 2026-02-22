@@ -1,0 +1,88 @@
+# Model configuration
+model:
+  type: "cnn"  # Options: cnn, transformer, crnn, wav2vec2
+  num_classes: 7  # Number of emotion classes
+  
+  # CNN specific
+  input_channels: 1
+  dropout_rate: 0.3
+  
+  # Transformer specific
+  input_dim: 80
+  d_model: 256
+  nhead: 8
+  num_layers: 6
+  
+  # CRNN specific
+  hidden_size: 128
+  num_layers: 2
+  
+  # Wav2Vec2 specific
+  model_name: "facebook/wav2vec2-base"
+  freeze_feature_extractor: true
+
+# Feature extraction configuration
+features:
+  type: "log_mel"  # Options: mfcc, log_mel, mel_spectrogram, spectrogram, chroma, combined
+  sample_rate: 16000
+  n_fft: 1024
+  hop_length: 512
+  n_mels: 80
+  n_mfcc: 13
+  f_min: 0
+  f_max: null
+  trim_silence: true
+
+# Data configuration
+data:
+  data_dir: "data/wav"
+  metadata_path: "data/meta/metadata.csv"
+  batch_size: 32
+  num_workers: 4
+  create_synthetic: true
+  synthetic_samples_per_emotion: 100
+
+# Training configuration
+training:
+  max_epochs: 100
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"  # Options: adam, adamw, sgd
+  scheduler: "plateau"  # Options: step, plateau, cosine, null
+  patience: 10
+  min_delta: 0.001
+  grad_clip: 1.0
+  num_workers: 4
+  seed: 42
+  
+  # Checkpointing
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  
+  # Scheduler specific
+  step_size: 10
+  gamma: 0.1
+  factor: 0.5
+  scheduler_patience: 5
+  T_max: 50
+
+# Evaluation configuration
+evaluation:
+  output_dir: "assets/evaluation"
+  create_visualizations: true
+  save_predictions: true
+
+# Augmentation configuration
+augmentation:
+  noise_factor: 0.005
+  speed_factor_range: [0.9, 1.1]
+  pitch_shift_range: [-2, 2]
+  time_stretch_range: [0.8, 1.2]
+
+# Demo configuration
+demo:
+  model_path: "checkpoints/best.pth"
+  sample_rate: 16000
+  max_duration: 10.0
+  interface: "streamlit"  # Options: streamlit, gradio

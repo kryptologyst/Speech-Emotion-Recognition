@@ -1,0 +1,68 @@
+# Model configuration for Transformer model
+model:
+  type: "transformer"
+  num_classes: 7
+  input_dim: 80
+  d_model: 512
+  nhead: 8
+  num_layers: 6
+  dropout_rate: 0.1
+
+# Feature extraction configuration
+features:
+  type: "log_mel"
+  sample_rate: 16000
+  n_fft: 1024
+  hop_length: 512
+  n_mels: 80
+  f_min: 0
+  f_max: null
+  trim_silence: true
+
+# Data configuration
+data:
+  data_dir: "data/wav"
+  metadata_path: "data/meta/metadata.csv"
+  batch_size: 16
+  num_workers: 4
+  create_synthetic: true
+  synthetic_samples_per_emotion: 100
+
+# Training configuration
+training:
+  max_epochs: 100
+  batch_size: 16
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  optimizer: "adamw"
+  scheduler: "cosine"
+  patience: 15
+  min_delta: 0.001
+  grad_clip: 1.0
+  num_workers: 4
+  seed: 42
+  
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  
+  T_max: 100
+
+# Evaluation configuration
+evaluation:
+  output_dir: "assets/evaluation"
+  create_visualizations: true
+  save_predictions: true
+
+# Augmentation configuration
+augmentation:
+  noise_factor: 0.003
+  speed_factor_range: [0.95, 1.05]
+  pitch_shift_range: [-1, 1]
+  time_stretch_range: [0.9, 1.1]
+
+# Demo configuration
+demo:
+  model_path: "checkpoints/best.pth"
+  sample_rate: 16000
+  max_duration: 10.0
+  interface: "streamlit"
